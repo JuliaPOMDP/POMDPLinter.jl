@@ -1,5 +1,11 @@
 using POMDPLinter
 using Test
+import POMDPs: POMDP, solve, DDNOut
+import POMDPs: states, stateindex, transition, discount, reward, observation, initialstate, initialobs, gen
+import POMDPs
+using Random
+
+mightbemissing(x) = ismissing(x) || x
 
 tcall = Meta.parse("f(arg1::T1, arg2::T2)")
 @test POMDPLinter.unpack_typedcall(tcall) == (:f, [:arg1, :arg2], [:T1, :T2])
@@ -53,10 +59,7 @@ module MyModule
     end
 end
 
-import POMDPs: POMDP, solve, states, DDNOut
-import POMDPs
 using Main.MyModule
-using Random
 
 mutable struct SimplePOMDP <: POMDP{Float64, Bool, Int} end
 POMDPs.actions(SimplePOMDP) = [true, false]
@@ -100,3 +103,55 @@ Random.rand(rng::AbstractRNG, d::SimpleDistribution) = sample(rng, d.ss, WeightV
 POMDPs.gen(::DDNOut{:o}, m::SimplePOMDP, s, a, rng) = 1
 
 @test solve(CoolSolver(), SimplePOMDP())
+
+struct A <: POMDP{Int,Bool,Bool} end
+struct B <: POMDP{Int, Bool, Bool} end
+struct W <: POMDP{Int, Bool, Int} end
+@testset "implement" begin
+    
+    # should start working in POMDPs v0.9
+    #=
+    @test_throws MethodError length(states(A()))
+    @test_throws MethodError stateindex(A(), 1)
+
+    @test !@implemented transition(::A, ::Int, ::Bool)
+    POMDPs.transition(::A, s, a) = [s+a]
+    @test @implemented transition(::A, ::Int, ::Bool)
+
+    @test !@implemented discount(::A)
+    POMDPs.discount(::A) = 0.95
+    @test @implemented discount(::A)
+
+    @test !@implemented reward(::A,::Int,::Bool,::Int)
+    @test !@implemented reward(::A,::Int,::Bool)
+    POMDPs.reward(::A,::Int,::Bool) = -1.0
+    @test @implemented reward(::A,::Int,::Bool,::Int)
+    @test @implemented reward(::A,::Int,::Bool)
+
+    @test !@implemented observation(::A,::Int,::Bool,::Int)
+    @test !@implemented observation(::A,::Bool,::Int)
+    POMDPs.observation(::A,::Bool,::Int) = [true, false]
+    @test @implemented observation(::A,::Int,::Bool,::Int)
+    @test @implemented observation(::A,::Bool,::Int)
+
+    @test !@implemented initialstate(::W, ::typeof(Random.GLOBAL_RNG))
+    @test !@implemented initialstate(::W, ::typeof(Random.GLOBAL_RNG), ::Nothing) # wrong number args
+    @test !@implemented initialobs(::W, ::Int, ::typeof(Random.GLOBAL_RNG))
+    @test !@implemented initialobs(::W, ::Int, ::typeof(Random.GLOBAL_RNG), ::Nothing) # wrong number args
+
+    POMDPs.transition(b::B, s::Int, a::Bool) = Deterministic(s+a)
+    @test mightbemissing(implemented(gen, Tuple{DDNOut{:sp}, B, Int, Bool, MersenneTwister}))
+
+    reward(b::B, s::Int, a::Bool, sp::Int) = -1.0
+    observation(b::B, s::Int, a::Bool, sp::Int) = Deterministic(sp)
+    @test mightbemissing(@implemented(gen(::DDNOut{(:sp,:o,:r)}, ::B, ::Int, ::Bool, ::MersenneTwister)))
+    @test mightbemissing(@implemented(gen(::DDNOut{(:sp,:o)}, b::B, s::Int, a::Bool, rng::MersenneTwister)))
+    @test mightbemissing(@implemented gen(::DDNOut{(:sp,:o,:r)}, b::B, s::Int, a::Bool, rng::MersenneTwister))
+    
+    initialstate_distribution(b::B) = Int[1,2,3]
+    @test @implemented initialstate(::B, ::MersenneTwister)
+
+    POMDPs.observation(b::B, s::Int) = Bool[s]
+    @test @implemented initialobs(::B, ::Int, ::MersenneTwister)
+    =#
+end

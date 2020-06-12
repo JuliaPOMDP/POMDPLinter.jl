@@ -51,6 +51,10 @@ end
 Create a get_requirements implementation for the function signature and the requirements block.
 """
 macro POMDP_require(typedcall, block)
+    return pomdp_require(typedcall, block)
+end
+
+function pomdp_require(typedcall, block)
     fname, args, types = unpack_typedcall(typedcall)
     tconstr = Expr[:($(Symbol(:T,i))<:$(esc(C))) for (i,C) in enumerate(types)] # oh snap
     ts = Symbol[Symbol(:T,i) for i in 1:length(types)]
