@@ -37,7 +37,7 @@ end
 """
 Return an expression that creates a RequirementSet using the code in the block. The resulting code will *always* return a RequirementSet, but it may be incomplete if the exception field is not null.
 """
-function pomdp_requirements(name::Union{Expr,String}, block::Expr)
+function pomdp_requirements(name::Union{Expr,Symbol,String}, block::Expr)
     block = deepcopy(block)
     req_found = handle_reqs!(block, :reqs)
     if !req_found
