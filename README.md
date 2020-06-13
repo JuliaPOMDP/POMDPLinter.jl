@@ -2,7 +2,7 @@
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaPOMDP.github.io/POMDPLinter.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaPOMDP.github.io/POMDPLinter.jl/dev)
-[![Build Status](https://travis-ci.com/zsunberg/POMDPLinter.jl.svg?branch=master)](https://travis-ci.com/JuliaPOMDP/POMDPLinter.jl)
+[![Build Status](https://travis-ci.com/JuliaPOMDP/POMDPLinter.jl.svg?branch=master)](https://travis-ci.com/JuliaPOMDP/POMDPLinter.jl)
 [![Coverage](https://codecov.io/gh/JuliaPOMDP/POMDPLinter.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaPOMDP/POMDPLinter.jl)
 
 This package houses tools for helping build POMDP models.
