@@ -13,6 +13,10 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "Requirements" => [
+            "Viewing Requirements" => "requirements.md",
+            "Specifying Requirements" => "specifying_requirements.md"
+        ]
     ],
 )
 

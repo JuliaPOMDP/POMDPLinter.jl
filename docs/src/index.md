@@ -4,9 +4,7 @@ CurrentModule = POMDPLinter
 
 # POMDPLinter
 
-```@index
-```
+Currently, the POMDPLinter package only contains tools for specifying and viewing interface requirements for a particular solver.
 
-```@autodocs
-Modules = [POMDPLinter]
+```@contents
 ```
