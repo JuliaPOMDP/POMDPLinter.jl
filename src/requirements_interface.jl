@@ -121,6 +121,8 @@ end
 Print information about the requirements for a solver.
 """
 macro requirements_info(exprs...)
+    # XXX
+    error("@requirements_info is broken until POMDPs 1.0 is released. Please use @show_requirements POMDPs.solve(solver, pomdp) instead.")
     quote
         requirements_info($([esc(ex) for ex in exprs]...))
     end
@@ -145,6 +147,9 @@ end
 function requirements_info(s, p, args...)
     # XXX Needs to be POMDPs.solve - don't know how to fix this until POMDPs 1.0 when POMDPLinter depends on POMDPs
     # Recommend working around for now
+    error("requirements_info is broken until POMDPs 1.0 is released. Please use show_requirements(get_requirements(POMDPs.solve, (solver, pomdp))) instead.")
+    
+    # This is what should happen
     reqs = get_requirements(solve, (s, p))
     show_requirements(reqs)
 end
