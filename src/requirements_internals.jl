@@ -319,7 +319,7 @@ macro impl_dep(signature, dependency, module_mask=[])
     impled = quote
         function implemented(f::typeof(first($tplex)), TT::Type{last($tplex)}) where {$(wheres...)}
             m = which(f,TT)
-            if m.module in module_mask && !implemented($deptplex...)
+            if m.module in $(module_mask) && !implemented($deptplex...)
                 return false
             else # a more specific implementation exists
                 return true
