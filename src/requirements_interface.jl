@@ -143,6 +143,8 @@ function requirements_info(s)
             """)
 end
 function requirements_info(s, p, args...)
+    # XXX Needs to be POMDPs.solve - don't know how to fix this until POMDPs 1.0 when POMDPLinter depends on POMDPs
+    # Recommend working around for now
     reqs = get_requirements(solve, (s, p))
     show_requirements(reqs)
 end
