@@ -104,13 +104,21 @@ POMDPs.gen(::DDNOut{:o}, m::SimplePOMDP, s, a, rng) = 1
 
 @test solve(CoolSolver(), SimplePOMDP())
 
+@testset "show_requirements" begin
+    @test @show_requirements(solve(CoolSolver(), SimplePOMDP()))==true
+end
+
+@testset "requirements_info" begin
+    @test_skip @requirements_info(CoolSolver(), SimplePOMDP())==true
+end
+
 struct A <: POMDP{Int,Bool,Bool} end
 struct B <: POMDP{Int, Bool, Bool} end
 struct W <: POMDP{Int, Bool, Int} end
 @testset "implement" begin
     
-    # should start working in POMDPs v0.9
-    #=
+    # broken tests should probably only be fixed when POMDPs 1.0 is released
+    
     @test_throws MethodError length(states(A()))
     @test_throws MethodError stateindex(A(), 1)
 
@@ -122,22 +130,20 @@ struct W <: POMDP{Int, Bool, Int} end
     POMDPs.discount(::A) = 0.95
     @test @implemented discount(::A)
 
-    @test !@implemented reward(::A,::Int,::Bool,::Int)
-    @test !@implemented reward(::A,::Int,::Bool)
+    @test_broken !@implemented POMDPs.reward(::A,::Int,::Bool,::Int)
+    @test !@implemented POMDPs.reward(::A,::Int,::Bool)
     POMDPs.reward(::A,::Int,::Bool) = -1.0
-    @test @implemented reward(::A,::Int,::Bool,::Int)
-    @test @implemented reward(::A,::Int,::Bool)
+    @test @implemented POMDPs.reward(::A,::Int,::Bool,::Int)
+    @test @implemented POMDPs.reward(::A,::Int,::Bool)
 
-    @test !@implemented observation(::A,::Int,::Bool,::Int)
-    @test !@implemented observation(::A,::Bool,::Int)
+    @test_broken !@implemented POMDPs.observation(::A,::Int,::Bool,::Int)
+    @test_broken !@implemented POMDPs.observation(::A,::Bool,::Int)
     POMDPs.observation(::A,::Bool,::Int) = [true, false]
-    @test @implemented observation(::A,::Int,::Bool,::Int)
-    @test @implemented observation(::A,::Bool,::Int)
+    @test @implemented POMDPs.observation(::A,::Int,::Bool,::Int)
+    @test @implemented POMDPs.observation(::A,::Bool,::Int)
 
-    @test !@implemented initialstate(::W, ::typeof(Random.GLOBAL_RNG))
-    @test !@implemented initialstate(::W, ::typeof(Random.GLOBAL_RNG), ::Nothing) # wrong number args
-    @test !@implemented initialobs(::W, ::Int, ::typeof(Random.GLOBAL_RNG))
-    @test !@implemented initialobs(::W, ::Int, ::typeof(Random.GLOBAL_RNG), ::Nothing) # wrong number args
+    @test_broken !@implemented POMDPs.initialstate(::W)
+    @test !@implemented POMDPs.initialobs(::W, ::Int)
 
     POMDPs.transition(b::B, s::Int, a::Bool) = Deterministic(s+a)
     @test mightbemissing(implemented(gen, Tuple{DDNOut{:sp}, B, Int, Bool, MersenneTwister}))
@@ -153,5 +159,6 @@ struct W <: POMDP{Int, Bool, Int} end
 
     POMDPs.observation(b::B, s::Int) = Bool[s]
     @test @implemented initialobs(::B, ::Int, ::MersenneTwister)
-    =#
 end
+
+
