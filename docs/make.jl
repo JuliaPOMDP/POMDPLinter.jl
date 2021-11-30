@@ -21,5 +21,5 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/zsunberg/POMDPLinter.jl",
+    repo="github.com/JuliaPOMDP/POMDPLinter.jl",
 )
