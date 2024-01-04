@@ -142,23 +142,11 @@ struct W <: POMDP{Int, Bool, Int} end
     @test @implemented POMDPs.observation(::A,::Int,::Bool,::Int)
     @test @implemented POMDPs.observation(::A,::Bool,::Int)
 
-    @test_broken !@implemented POMDPs.initialstate(::W)
+    @test !@implemented POMDPs.initialstate(::W)
     @test !@implemented POMDPs.initialobs(::W, ::Int)
 
-    POMDPs.transition(b::B, s::Int, a::Bool) = Deterministic(s+a)
-    @test mightbemissing(implemented(gen, Tuple{DDNOut{:sp}, B, Int, Bool, MersenneTwister}))
-
-    reward(b::B, s::Int, a::Bool, sp::Int) = -1.0
-    observation(b::B, s::Int, a::Bool, sp::Int) = Deterministic(sp)
-    @test mightbemissing(@implemented(gen(::DDNOut{(:sp,:o,:r)}, ::B, ::Int, ::Bool, ::MersenneTwister)))
-    @test mightbemissing(@implemented(gen(::DDNOut{(:sp,:o)}, b::B, s::Int, a::Bool, rng::MersenneTwister)))
-    @test mightbemissing(@implemented gen(::DDNOut{(:sp,:o,:r)}, b::B, s::Int, a::Bool, rng::MersenneTwister))
-    
-    initialstate_distribution(b::B) = Int[1,2,3]
-    @test @implemented initialstate(::B, ::MersenneTwister)
-
-    POMDPs.observation(b::B, s::Int) = Bool[s]
-    @test @implemented initialobs(::B, ::Int, ::MersenneTwister)
+    initialstate(b::B) = Int[1,2,3]
+    @test @implemented initialstate(::B)
 end
 
 
