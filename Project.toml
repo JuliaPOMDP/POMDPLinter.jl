@@ -1,14 +1,14 @@
 name = "POMDPLinter"
 uuid = "f3bd98c0-eb40-45e2-9eb1-f2763262d755"
 authors = ["Zachary Sunberg <sunbergzach@gmail.com> and contributors"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
 
 [compat]
 julia = "1.6"
-POMDPs = "0.9"
+POMDPs = "0.9, 1"
 
 [extras]
 POMDPs = "a93abf59-7444-517b-a68a-c42f96afdd7d"
