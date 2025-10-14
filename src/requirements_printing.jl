@@ -46,7 +46,7 @@ function format_method(f::Function, argtypes::TupleType; module_names=false, col
     fname = f
     typenames = argtypes.parameters
     if !module_names
-        fname = typeof(f).name.mt.name
+        fname = nameof(f)
         mless_typenames = []
         for t in argtypes.parameters
             if isa(t, Union)
